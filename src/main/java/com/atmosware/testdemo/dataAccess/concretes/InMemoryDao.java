@@ -1,27 +1,17 @@
-package com.atmosware.testdemo.dataAccess.inMemoryDao;
+package com.atmosware.testdemo.dataAccess.concretes;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+import com.atmosware.testdemo.dataAccess.abstracts.EntityDao;
 import com.atmosware.testdemo.entities.concretes.CreditCard;
 import com.atmosware.testdemo.entities.concretes.Customer;
 import com.atmosware.testdemo.entities.concretes.CustomerBalance;
-import com.atmosware.testdemo.entities.concretes.Payment;
 
 @Repository
-@Component
-public class InMemoryDao {
-	
-public List<Customer> customers = new ArrayList<Customer>();
-public List<CreditCard> creditCars = new ArrayList<CreditCard>();
-public List<Payment> payments = new ArrayList<Payment>();
-public List<CustomerBalance> customerBalances = new ArrayList<CustomerBalance>();
-	
-	public InMemoryDao() {
+public class InMemoryDao implements EntityDao {
 		
+	public InMemoryDao() {
+		super();
 		customers.add(new Customer(1,"furkan","ozgun"));
 		customers.add(new Customer(2,"umut","taze"));
 		customers.add(new Customer(3,"fatih","cakir"));

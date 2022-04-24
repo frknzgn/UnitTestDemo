@@ -14,21 +14,21 @@ import com.atmosware.testdemo.business.abstracts.PosService;
 import com.atmosware.testdemo.business.common.exceptions.BusinessException;
 import com.atmosware.testdemo.business.requests.CreateCreditCardRequest;
 import com.atmosware.testdemo.business.requests.MakePaymentRequest;
-import com.atmosware.testdemo.dataAccess.inMemoryDao.InMemoryDao;
+import com.atmosware.testdemo.dataAccess.abstracts.EntityDao;
 import com.atmosware.testdemo.entities.concretes.Payment;
 
 @Service
 public class PaymentManager implements PaymentService {
 	
-	private InMemoryDao inMemoryDao;
+	private EntityDao entityDao;
 	private CustomerService customerService;
 	private PosService posService;
 	private CreditCardService creditCardService;
 	
 	@Autowired
-	public PaymentManager(InMemoryDao inMemoryDao, CustomerService customerService, PosService posService, CreditCardService creditCardService) {
+	public PaymentManager(EntityDao entityDao, CustomerService customerService, PosService posService, CreditCardService creditCardService) {
 		
-		this.inMemoryDao = inMemoryDao;
+		this.entityDao = entityDao;
 		this.customerService = customerService;
 		this.posService = posService;
 		this.creditCardService = creditCardService;
@@ -42,17 +42,17 @@ public class PaymentManager implements PaymentService {
 		this.creditCardService.checkCreditCardExpired(createCreditCardRequest);
 		
 		checkPaymentDone(createCreditCardRequest,makePaymentRequest.getTotal(),
-						inMemoryDao.customerBalances.get(makePaymentRequest.getCustomerId()-1).getBalance());
+				entityDao.customerBalances.get(makePaymentRequest.getCustomerId()-1).getBalance());
 		
-		inMemoryDao.payments.add(new Payment(inMemoryDao.payments.size()+1, makePaymentRequest.getTotal(), 
-												makePaymentRequest.getCustomerId(), inMemoryDao.payments.size()+1,
+		entityDao.payments.add(new Payment(entityDao.payments.size()+1, makePaymentRequest.getTotal(), 
+												makePaymentRequest.getCustomerId(), entityDao.payments.size()+1,
 																									LocalDate.now()));
 	}
 
 	@Override
 	public List<Payment> getAll() {
 		
-		return inMemoryDao.payments;
+		return entityDao.payments;
 		
 	}
 	

@@ -9,17 +9,18 @@ import org.springframework.stereotype.Service;
 import com.atmosware.testdemo.business.abstracts.CreditCardService;
 import com.atmosware.testdemo.business.common.exceptions.BusinessException;
 import com.atmosware.testdemo.business.requests.CreateCreditCardRequest;
-import com.atmosware.testdemo.dataAccess.inMemoryDao.InMemoryDao;
+import com.atmosware.testdemo.dataAccess.abstracts.EntityDao;
+import com.atmosware.testdemo.dataAccess.concretes.InMemoryDao;
 import com.atmosware.testdemo.entities.concretes.CreditCard;
 
 @Service
 public class CreditCardManager implements CreditCardService {
 	
-	private InMemoryDao inMemoryDao;
+	private EntityDao entityDao;
 	
-	public CreditCardManager(InMemoryDao inMemoryDao) {
+	public CreditCardManager(EntityDao entityDao) {
 		
-		this.inMemoryDao = inMemoryDao;
+		this.entityDao = entityDao;
 		
 	}
 	
@@ -27,20 +28,20 @@ public class CreditCardManager implements CreditCardService {
 		
 		checkCreditCardExpired(createCreditCardRequest);
 		
-		CreditCard creditCard = new CreditCard(inMemoryDao.creditCars.size()+1,
+		CreditCard creditCard = new CreditCard(entityDao.creditCars.size()+1,
 												createCreditCardRequest.getCardHolder(),
 													createCreditCardRequest.getCardNumber(),
 														createCreditCardRequest.getCsv(),
 															createCreditCardRequest.getExpiration());
 		
-		inMemoryDao.creditCars.add(creditCard);
+		entityDao.creditCars.add(creditCard);
 		
 	}
 	
 	@Override
 	public void getAll() {
 		
-		System.out.println("\n"+inMemoryDao.creditCars+"\n");
+		System.out.println("\n"+entityDao.creditCars+"\n");
 		
 	}
 	

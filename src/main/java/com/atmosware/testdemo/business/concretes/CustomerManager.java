@@ -7,18 +7,18 @@ import org.springframework.stereotype.Service;
 import com.atmosware.testdemo.business.abstracts.CustomerService;
 import com.atmosware.testdemo.business.common.exceptions.BusinessException;
 import com.atmosware.testdemo.business.requests.CreateCustomerRequest;
-import com.atmosware.testdemo.dataAccess.inMemoryDao.InMemoryDao;
+import com.atmosware.testdemo.dataAccess.abstracts.EntityDao;
 import com.atmosware.testdemo.entities.concretes.Customer;
 
 @Service
 public class CustomerManager implements CustomerService {
 	
-	private InMemoryDao inMemoryDao;
+	private EntityDao entityDao;
 	
 	
-	public CustomerManager(InMemoryDao inMemoryDao) {
+	public CustomerManager(EntityDao entityDao) {
 		
-		this.inMemoryDao=inMemoryDao;
+		this.entityDao=entityDao;
 		
 	}
 
@@ -27,11 +27,11 @@ public class CustomerManager implements CustomerService {
 		
 		checkCustomerExists(createCustomerRequest);
 		
-		Customer customer = new Customer(inMemoryDao.customers.size()+1,
+		Customer customer = new Customer(entityDao.customers.size()+1,
 											createCustomerRequest.getFirstName(),
 												createCustomerRequest.getLastName());
 
-		inMemoryDao.customers.add(customer);
+		entityDao.customers.add(customer);
 		
 	}
 	
@@ -39,7 +39,7 @@ public class CustomerManager implements CustomerService {
 	@Override
 	public List<Customer> getAll() {
 		
-		return this.inMemoryDao.customers;
+		return this.entityDao.customers;
 		
 	}
 
@@ -47,7 +47,7 @@ public class CustomerManager implements CustomerService {
 
 	public void checkCustomerExists(CreateCustomerRequest createCustomerRequest) {
 		
-		for (Customer currentCustomer : inMemoryDao.customers) {			
+		for (Customer currentCustomer : entityDao.customers) {			
 			if(currentCustomer.getFirstName().compareToIgnoreCase(createCustomerRequest.getLastName()) == 0 && (currentCustomer.getLastName().compareToIgnoreCase(createCustomerRequest.getLastName()) ==0)) {
 				throw new BusinessException("Customer.Exists");
 			}			
@@ -55,7 +55,7 @@ public class CustomerManager implements CustomerService {
 	}
 	
 	public void checkCustomerNotExists(int customerId) throws BusinessException {	
-		if(inMemoryDao.customers.size()<customerId) {
+		if(entityDao.customers.size()<customerId) {
 			throw new BusinessException("Customer.Not.Exists");
 		}
 	}

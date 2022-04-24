@@ -8,18 +8,19 @@ import com.atmosware.testdemo.business.abstracts.CustomerBalanceService;
 import com.atmosware.testdemo.business.abstracts.CustomerService;
 import com.atmosware.testdemo.business.common.exceptions.BusinessException;
 import com.atmosware.testdemo.business.requests.CreateCustomerBalanceRequest;
-import com.atmosware.testdemo.dataAccess.inMemoryDao.InMemoryDao;
+import com.atmosware.testdemo.dataAccess.abstracts.EntityDao;
+import com.atmosware.testdemo.dataAccess.concretes.InMemoryDao;
 import com.atmosware.testdemo.entities.concretes.CustomerBalance;
 
 @Service
 public class CustomerBalanceManager implements CustomerBalanceService{
 	
-	private InMemoryDao inMemoryDao;
+	private EntityDao entityDao;
 	private CustomerService customerService;
 	
-	public CustomerBalanceManager(InMemoryDao inMemoryDao, CustomerService customerService) {
+	public CustomerBalanceManager(EntityDao entityDao, CustomerService customerService) {
 		
-		this.inMemoryDao = inMemoryDao;
+		this.entityDao = entityDao;
 		this.customerService = customerService;
 		
 	}
@@ -29,7 +30,7 @@ public class CustomerBalanceManager implements CustomerBalanceService{
 		
 		customerService.checkCustomerNotExists(createCustomerBalanceRequest.getCustomerId());
 		
-		this.inMemoryDao.customerBalances.add(new CustomerBalance(inMemoryDao.customerBalances.size()+1, 
+		this.entityDao.customerBalances.add(new CustomerBalance(entityDao.customerBalances.size()+1, 
 																		createCustomerBalanceRequest.getCustomerId(), 
 																				createCustomerBalanceRequest.getBalance()));
 		
@@ -38,7 +39,7 @@ public class CustomerBalanceManager implements CustomerBalanceService{
 	@Override
 	public List<CustomerBalance> getAll() {
 		
-		return this.inMemoryDao.customerBalances;
+		return this.entityDao.customerBalances;
 	}
 
 	@Override
@@ -46,7 +47,7 @@ public class CustomerBalanceManager implements CustomerBalanceService{
 		
 		customerService.checkCustomerNotExists(customerId);
 		
-		for (CustomerBalance currentCustomerBalance: inMemoryDao.customerBalances) {
+		for (CustomerBalance currentCustomerBalance: entityDao.customerBalances) {
 			if(currentCustomerBalance.getCustomerId()==customerId) {
 				return currentCustomerBalance;
 			}		
